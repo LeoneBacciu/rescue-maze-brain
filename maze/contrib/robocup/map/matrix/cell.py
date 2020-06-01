@@ -8,14 +8,12 @@ class Cell(AbstractCell):
         self.black = False
         self.checkpoint = False
         self.victim = False
-        self.ramp = False
 
     def learn(self, walls, **kwargs):
         super().learn(walls, **kwargs)
         self.black = kwargs.get('black', False)
         self.checkpoint = kwargs.get('checkpoint', False)
         self.victim = kwargs.get('victim', False)
-        self.ramp = kwargs.get('ramp', False)
 
     def canGo(self, cell):
         return not cell.black

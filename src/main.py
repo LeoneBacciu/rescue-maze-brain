@@ -1,18 +1,30 @@
-from maze.contrib.robocup.map.matrix import Matrix, Cell, Walls
 from maze.contrib.robocup.map import Map
-from maze.core.utils import MazeSettings
+from maze.contrib.robocup.map.matrix import Matrix, Cell, Walls
+from maze.contrib.robocup.communication.flags import Flags
+from maze.core.utils.settings import *
+from maze.bridge import Bridge
+from maze.robot.robot.robot import Robot
 
 if __name__ == '__main__':
 
-    settings = MazeSettings(
+    maze_settings = MazeSettings(
+        map=Map,
         matrix=Matrix,
         cell=Cell,
         walls=Walls,
         dims=(1, 30, 30)
     )
 
-    maze = Map(settings)
-    maze.build()
-    maze.update(0, 0, [0, 0, 1, 1])
-    maze.update(1, 0, [1, 1, 0, 0], black=True)
-    maze.search()
+    serial_settings = SerialSettings(
+        bridge=Bridge,
+        port='/dev/pts/3',
+        baud_rate=9600,
+        flag=Flags
+    )
+
+    robot = Robot(
+        maze_settings=maze_settings,
+        serial_settings=serial_settings
+    )
+
+    robot.run()
