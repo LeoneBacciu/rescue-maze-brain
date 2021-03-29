@@ -1,13 +1,12 @@
 from abc import ABC
 import numpy as np
 
-from maze.core.utils.settings import MazeSettings
 from maze.core.navigation import Coord
 
 
 class AbstractMatrix(ABC):
 
-    def __init__(self, settings: MazeSettings):
+    def __init__(self, settings: 'MazeSettings'):
         self._dims = settings.dims
         self._cell = settings.cell
         self.level = 0

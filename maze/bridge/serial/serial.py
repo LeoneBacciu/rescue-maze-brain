@@ -10,14 +10,15 @@ class Serial:
             kwargs.update({'timeout': None})
         self.serial = PySerial(port, baud_rate, **kwargs)
 
-    def send(self, data):
+    def write(self, data):
         self.serial.write(data)
 
-    def waitAndRead(self):
-        buffer = bytearray()
-        while not (len(buffer) and buffer[-1] == 0xff):
-            buffer.append(self.serial.read(1)[0])
+    def read(self):
+        buffer = bytes()
+        while len(buffer) == 0 or buffer[-1] != 0xff:
+            buffer += self.serial.read(1)
         return buffer
 
     def __del__(self):
-        self.serial.close()
+        # self.serial.close()
+        pass

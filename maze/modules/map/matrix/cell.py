@@ -1,13 +1,12 @@
 from abc import ABC, abstractmethod
 
-from maze.core.utils.settings import MazeSettings
 from maze.core.utils.constants import *
 from maze.core.navigation import Coord
 
 
 class AbstractCell(ABC):
 
-    def __init__(self, x, y, matrix, settings: MazeSettings):
+    def __init__(self, x, y, matrix, settings: 'MazeSettings'):
         self.pos = Coord(x, y)
         self.explored = False
         self.walls = settings.walls()

@@ -1,23 +1,24 @@
-from maze.core.communication.envelope import *
-from maze.core.utils.settings import SerialSettings
-from maze.bridge.protocol import Translator
+from random import randint
+
 from maze.bridge.serial import Serial
+from maze.core.communication.envelope import *
+from maze.core.utils.constants import *
 
 
 class Bridge:
 
-    def __init__(self, settings: SerialSettings):
+    def __init__(self, settings: 'SerialSettings'):
         self.settings = settings
         self.serial = Serial(settings.port, settings.baud_rate)
 
-    def send(self, direction, flags):
-        self.sendEnvelope(Envelope(data=direction, flags=flags))
+    def handshake(self):
+        key = randint(0, 0xff)
+        self.serial.write(bytes([START_TOKEN, key, STOP_TOKEN]))
+        if key != int(self.serial.read()[1]):
+            raise Exception()
 
-    def sendEnvelope(self, envelope: Envelope):
-        self.serial.send(Translator.encode(envelope))
+    def send_envelope(self, envelope: BaseOutputEnvelope):
+        self.serial.write(bytes(envelope))
 
-    def read(self):
-        return self.readEnvelope().split()
-
-    def readEnvelope(self):
-        return Translator.decode(self.serial.waitAndRead())
+    def read_envelope(self):
+        return self.settings.input_envelope.from_bytes(self.serial.read())

@@ -2,13 +2,12 @@ import pickle
 from abc import ABC
 import numpy as np
 
-from maze.core.utils.settings import MazeSettings
 from maze.core.navigation import Coord
 
 
 class AbstractMap(ABC):
 
-    def __init__(self, settings: MazeSettings):
+    def __init__(self, settings: 'MazeSettings'):
         self.dims = settings.dims
         self.backup_dir = settings.backup_dir
         self.pos: Coord = None
@@ -46,6 +45,6 @@ class AbstractMap(ABC):
             pickle.dump(self, f)
 
     @staticmethod
-    def load(settings: MazeSettings):
+    def load(settings: 'MazeSettings'):
         with open(f'{settings.backup_dir}/backup.bk', 'w+') as f:
             return pickle.load(f)
