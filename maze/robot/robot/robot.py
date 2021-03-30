@@ -17,13 +17,14 @@ class Robot:
     def run(self):
 
         self.bridge.handshake()
-        e = OutputEnvelope(Direction.top, True, 0x10)
-        self.bridge.send_envelope(e)
-        # print(str(e.walls))
-        # print(e.black)
-        # print(e.checkpoint)
-        #
-        # self.bridge.send(BaseDirections(True, False, False, False), InputFlags(was_black=True))
+
+        directions = [Direction.top, Direction.top, Direction.left, Direction.top, Direction.top, Direction.right]
+
+        for d in directions:
+            ie = OutputEnvelope(d, True, 0x10)
+            self.bridge.send_envelope(ie)
+            e = self.bridge.read_envelope()
+            print(str(e))
 
         return
         # while True:
