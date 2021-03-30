@@ -17,7 +17,7 @@ class Robot:
     def run(self):
 
         self.bridge.handshake()
-        e = OutputEnvelope(Direction.top, True, False)
+        e = OutputEnvelope(Direction.top, True, 0x10)
         self.bridge.send_envelope(e)
         # print(str(e.walls))
         # print(e.black)

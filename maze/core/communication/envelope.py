@@ -9,8 +9,7 @@ class BaseInputEnvelope:
     @classmethod
     def from_bytes(cls, data):
         walls = [bool(w) for w in data[1:5]]
-        flags = map(lambda f: f == 0x01, data[5:-1])
-        return cls(walls, *flags)
+        return cls(walls, *data[5:-1])
 
 
 class BaseOutputEnvelope:
@@ -21,5 +20,5 @@ class BaseOutputEnvelope:
     def __bytes__(self):
         direction = [0] * 4
         direction[self.direction.value] = 1
-        flags = [int(v) for f, v in vars(self).items() if f != 'direction' and isinstance(v, bool)]
+        flags = [v for f, v in vars(self).items() if f != 'direction' and isinstance(v, int)]
         return bytes([START_TOKEN] + direction + flags + [STOP_TOKEN])
