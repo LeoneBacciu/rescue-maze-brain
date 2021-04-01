@@ -1,8 +1,11 @@
+from abc import ABC, abstractmethod
+
 from maze.core.utils.constants import *
 
 
-class BaseInputEnvelope:
+class BaseInputEnvelope(ABC):
 
+    @abstractmethod
     def __init__(self, walls, *flags):
         self.walls = walls
 
@@ -16,8 +19,9 @@ class BaseInputEnvelope:
         return f'Walls: {str(self.walls)}, Flags: {str(flags)}'
 
 
-class BaseOutputEnvelope:
+class BaseOutputEnvelope(ABC):
 
+    @abstractmethod
     def __init__(self, direction, *flags):
         self.direction = direction
 
