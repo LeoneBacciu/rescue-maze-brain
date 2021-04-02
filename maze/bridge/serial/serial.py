@@ -20,5 +20,4 @@ class Serial:
         return buffer
 
     def __del__(self):
-        # self.serial.close()
-        pass
+        self.serial.close()

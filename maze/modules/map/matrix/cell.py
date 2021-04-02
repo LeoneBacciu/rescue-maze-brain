@@ -1,37 +1,48 @@
 from abc import ABC, abstractmethod
 
-from maze.core.utils.constants import *
 from maze.core.navigation import Coord
+from maze.core.utils.constants import *
 
 
 class AbstractCell(ABC):
 
-    def __init__(self, x, y, matrix, settings: 'MazeSettings'):
-        self.pos = Coord(x, y)
-        self.explored = False
-        self.walls = settings.walls()
-        self.matrix = matrix
-        self.ramp = []
-        self.ramp_id = None
-
-    def learn(self, walls, **kwargs):
-        self.walls.setWalls(walls)
-        self.explored = True
-        self.ramp = kwargs.get('ramp', [])
-        self.ramp_id = kwargs.get('ramp_id', None)
+    @abstractmethod
+    def __init__(self, walls, *args, **kwargs):
+        self.coord = Coord(0, 0)
+        self.walls = walls
 
     @abstractmethod
-    def canGo(self, cell):
+    def can_go(self, cell):
         pass
 
     def isAdjacent(self, cell):
-        return (cell.pos.x - self.pos.x, cell.pos.y - self.pos.y) in NEIGHBOURS
+        return (cell.pos.x - self.coord.x, cell.pos.y - self.coord.y) in NEIGHBOURS
 
-    def getNeighbours(self):
+    def getNeighbours(self, matrix):
         neighbours = []
         for i, d in enumerate(NEIGHBOURS):
-            if self.walls.isFree(i):
-                cell = self.matrix.get(self.pos + d)
-                if self.isAdjacent(cell) and self.canGo(cell):
-                    neighbours.append(self.pos + d)
+            if self.walls[i] == 0:
+                cell = matrix.get(self.coord + d)
+                if self.isAdjacent(cell) and self.can_go(cell):
+                    neighbours.append(self.coord + d)
         return neighbours
+
+    def set_coord(self, coord: Coord):
+        self.coord = coord
+
+    @property
+    @abstractmethod
+    def explored(self):
+        pass
+
+
+class AnonymousCell(AbstractCell):
+    def __init__(self, *args, **kwargs):
+        super().__init__(None, *args, **kwargs)
+
+    def can_go(self, cell):
+        return False
+
+    @property
+    def explored(self):
+        return False

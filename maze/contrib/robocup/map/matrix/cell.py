@@ -3,17 +3,15 @@ from maze.modules.map.matrix.cell import AbstractCell
 
 class Cell(AbstractCell):
 
-    def __init__(self, x, y, matrix, settings):
-        super().__init__(x, y, matrix, settings)
-        self.black = False
-        self.checkpoint = False
-        self.victim = False
+    def __init__(self, walls, black, checkpoint, victim, *args, **kwargs):
+        super().__init__(walls, *args, **kwargs)
+        self.black = black
+        self.checkpoint = checkpoint
+        self.victim = victim
 
-    def learn(self, walls, **kwargs):
-        super().learn(walls, **kwargs)
-        self.black = kwargs.get('black', False)
-        self.checkpoint = kwargs.get('checkpoint', False)
-        self.victim = kwargs.get('victim', False)
-
-    def canGo(self, cell):
+    def can_go(self, cell):
         return not cell.black
+
+    @property
+    def explored(self):
+        return True

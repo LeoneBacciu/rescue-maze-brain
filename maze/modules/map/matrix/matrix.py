@@ -1,12 +1,14 @@
 from abc import ABC
+
 import numpy as np
 
 from maze.core.navigation import Coord
+from maze.modules.map.matrix.cell import AnonymousCell
 
 
 class AbstractMatrix(ABC):
 
-    def __init__(self, settings: 'MazeSettings'):
+    def __init__(self, settings):
         self._dims = settings.dims
         self._cell = settings.cell
         self.level = 0
@@ -14,7 +16,7 @@ class AbstractMatrix(ABC):
         for h in range(self._dims[0]):
             for x in range(self._dims[1]):
                 for y in range(self._dims[2]):
-                    self._matrix[h][y][x] = settings.cell(x, y, self, settings)
+                    self._matrix[h][y][x] = AnonymousCell()
 
     def climb(self, p: int):
         self.level += p
@@ -25,3 +27,8 @@ class AbstractMatrix(ABC):
         else:
             return self._matrix[self.level][args[1]][args[0]]
 
+    def set(self, *args):
+        if len(args) == 2 and type(args[0]) == Coord:
+            self._matrix[self.level][args[0].y][args[0].x] = args[1]
+        else:
+            self._matrix[self.level][args[1]][args[0]] = args[2]

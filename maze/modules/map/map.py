@@ -1,24 +1,23 @@
 import pickle
 from abc import ABC
+
 import numpy as np
 
 from maze.core.navigation import Coord
+from maze.modules.map.matrix import AbstractCell
 
 
 class AbstractMap(ABC):
 
-    def __init__(self, settings: 'MazeSettings'):
+    def __init__(self, settings):
         self.dims = settings.dims
         self.backup_dir = settings.backup_dir
-        self.pos: Coord = None
+        self.pos = Coord(self.dims[1] // 2, self.dims[2] // 2)
         self.matrix = settings.matrix(settings)
-        self.center()
-        self.ramps = []
-        self.pending = []
 
-    def update(self, coord: Coord, walls, **kwargs):
-        cell = self.matrix.get(coord)
-        cell.learn(walls, **kwargs)
+    def update(self, cell: AbstractCell):
+        self.current_cell = cell
+        self.current_cell.set_coord(self.pos)
 
     def bfs(self, check):
         queue = [[self.pos]]
@@ -37,14 +36,19 @@ class AbstractMap(ABC):
     def goto(self, coord: Coord):
         self.pos.update(coord.x, coord.y)
 
-    def center(self):
-        self.pos = Coord(self.dims[1] // 2, self.dims[2] // 2)
+    @property
+    def current_cell(self) -> AbstractCell:
+        return self.matrix.get(self.pos)
+
+    @current_cell.setter
+    def current_cell(self, value):
+        self.matrix.set(self.pos, value)
 
     def save(self):
         with open(f'{self.backup_dir}/backup.bk', 'w+') as f:
             pickle.dump(self, f)
 
     @staticmethod
-    def load(settings: 'MazeSettings'):
+    def load(settings):
         with open(f'{settings.backup_dir}/backup.bk', 'w+') as f:
             return pickle.load(f)
