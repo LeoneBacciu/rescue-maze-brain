@@ -13,14 +13,19 @@ class Robot:
 
     def run(self):
         self.bridge.handshake()
+        prev_direction = None
         while True:
             ie = self.bridge.read_envelope()
+
+            if prev_direction and self.brain.successful(ie):
+                self.map.goto(prev_direction)
+
             self.map.update(self.brain.learn(ie))
             try:
                 oe = self.brain.act()
             except StopIteration:
                 break
-            self.map.goto(oe.direction)
+            prev_direction = oe.direction
             self.bridge.send_envelope(oe)
         self.bridge.stop()
         return

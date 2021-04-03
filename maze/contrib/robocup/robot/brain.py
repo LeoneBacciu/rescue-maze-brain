@@ -1,12 +1,15 @@
 from maze.contrib.robocup.communication.envelope import InputEnvelope, OutputEnvelope
 from maze.contrib.robocup.map.matrix import Cell
 from maze.core.communication.directions import Direction
+from maze.core.communication.envelope import BaseInputEnvelope
 from maze.core.navigation.coord import absolute_to_directions
 from maze.robot.brain.brain import AbstractBrain
 
 
 class Brain(AbstractBrain):
-    directions = iter([Direction.top, Direction.top, Direction.left, Direction.top, Direction.top, Direction.right])
+
+    def successful(self, envelope: InputEnvelope) -> bool:
+        return not envelope.black
 
     def learn(self, envelope: InputEnvelope) -> Cell:
         return Cell(envelope.walls, black=envelope.black, checkpoint=envelope.checkpoint, victim=False)

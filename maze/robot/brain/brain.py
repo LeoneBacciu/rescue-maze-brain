@@ -15,6 +15,10 @@ class AbstractBrain(ABC):
         self.buffer = []
 
     @abstractmethod
+    def successful(self, envelope: BaseInputEnvelope) -> bool:
+        pass
+
+    @abstractmethod
     def learn(self, envelope: BaseInputEnvelope) -> AbstractCell:
         pass
 
