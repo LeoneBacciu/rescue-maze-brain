@@ -3,7 +3,9 @@ from abc import ABC
 
 import numpy as np
 
+from maze.core.communication.directions import Direction
 from maze.core.navigation import Coord
+from maze.core.utils.constants import NEIGHBOURS
 from maze.modules.map.matrix import AbstractCell
 
 
@@ -33,8 +35,8 @@ class AbstractMap(ABC):
                 queue.append(element + [neighbour])
         return False
 
-    def goto(self, coord: Coord):
-        self.pos.update(coord.x, coord.y)
+    def goto(self, direction: Direction):
+        self.pos += NEIGHBOURS[direction.value]
 
     @property
     def current_cell(self) -> AbstractCell:

@@ -1,6 +1,5 @@
 from maze.contrib.robocup.communication.envelope import InputEnvelope, OutputEnvelope
 from maze.contrib.robocup.map import Map
-from maze.contrib.robocup.map.matrix import Matrix, Cell, Walls
 from maze.core.utils.settings import *
 from maze.bridge import Bridge
 from maze.robot.robot.robot import Robot
@@ -12,7 +11,6 @@ if __name__ == '__main__':
         map=Map,
         matrix=Matrix,
         cell=Cell,
-        walls=Walls,
         dims=(1, 30, 30)
     )
 

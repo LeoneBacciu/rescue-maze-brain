@@ -48,3 +48,6 @@ def absoluteToRelative(coords: list):
     for i in range(1, len(coords)):
         out.append(coords[i] - coords[i - 1])
     return out
+
+
+direction_to_coord = ((1, 0), (0, 1), (-1, 0), (0, -1))
