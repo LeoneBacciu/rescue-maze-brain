@@ -1,6 +1,7 @@
 from maze.contrib.robocup.communication.envelope import InputEnvelope, OutputEnvelope
 from maze.contrib.robocup.map.matrix import Cell
 from maze.core.communication.directions import Direction
+from maze.core.navigation.coord import absolute_to_directions
 from maze.robot.brain.brain import AbstractBrain
 
 
@@ -11,4 +12,6 @@ class Brain(AbstractBrain):
         return Cell(envelope.walls, black=envelope.black, checkpoint=envelope.checkpoint, victim=False)
 
     def act(self) -> OutputEnvelope:
-        return OutputEnvelope(next(Brain.directions), False, False)
+        if len(self.buffer) == 0:
+            self.buffer = absolute_to_directions(self.map.bfs(lambda c: not c.explored))
+        return OutputEnvelope(self.buffer.pop(0), False, False)

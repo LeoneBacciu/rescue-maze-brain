@@ -1,3 +1,8 @@
+from typing import List
+
+from maze.core.communication.directions import int_to_direction
+
+
 class Coord:
 
     def __init__(self, *args):
@@ -43,6 +48,13 @@ class Coord:
         return self.x, self.y
 
 
+direction_to_coord = ((1, 0), (0, 1), (-1, 0), (0, -1))
+
+
+def coord_to_direction(coord: Coord):
+    return int_to_direction[direction_to_coord.index((coord.x, coord.y))]
+
+
 def absoluteToRelative(coords: list):
     out = []
     for i in range(1, len(coords)):
@@ -50,4 +62,5 @@ def absoluteToRelative(coords: list):
     return out
 
 
-direction_to_coord = ((1, 0), (0, 1), (-1, 0), (0, -1))
+def absolute_to_directions(coords: List[Coord]):
+    return [coord_to_direction(coords[i]-coords[i-1]) for i in range(1, len(coords))]

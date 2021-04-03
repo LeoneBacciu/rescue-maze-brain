@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from random import sample
 
 from maze.core.navigation import Coord
 from maze.core.utils.constants import *
@@ -12,19 +13,21 @@ class AbstractCell(ABC):
         self.walls = walls
 
     @abstractmethod
-    def can_go(self, cell):
+    def can_go(self):
         pass
 
-    def isAdjacent(self, cell):
-        return (cell.pos.x - self.coord.x, cell.pos.y - self.coord.y) in NEIGHBOURS
+    def is_adjacent(self, cell):
+        return (cell.coord.x - self.coord.x, cell.coord.y - self.coord.y) in NEIGHBOURS
 
-    def getNeighbours(self, matrix):
+    def get_neighbours(self, matrix, random=False):
         neighbours = []
-        for i, d in enumerate(NEIGHBOURS):
-            if self.walls[i] == 0:
-                cell = matrix.get(self.coord + d)
-                if self.isAdjacent(cell) and self.can_go(cell):
-                    neighbours.append(self.coord + d)
+        if self.explored:
+            iterator = sample(NEIGHBOURS, len(NEIGHBOURS)) if random else NEIGHBOURS
+            for i, d in enumerate(iterator):
+                if self.walls[i] == 0:
+                    cell = matrix.get(self.coord + d)
+                    if cell.can_go():
+                        neighbours.append(self.coord + d)
         return neighbours
 
     def set_coord(self, coord: Coord):
@@ -40,8 +43,8 @@ class AnonymousCell(AbstractCell):
     def __init__(self, *args, **kwargs):
         super().__init__(None, *args, **kwargs)
 
-    def can_go(self, cell):
-        return False
+    def can_go(self):
+        return True
 
     @property
     def explored(self):

@@ -12,6 +12,7 @@ class AbstractBrain(ABC):
         self.map = abstract_map
         self.pos = self.map.pos
         self.prev_pos = copy(self.map.pos)
+        self.buffer = []
 
     @abstractmethod
     def learn(self, envelope: BaseInputEnvelope) -> AbstractCell:

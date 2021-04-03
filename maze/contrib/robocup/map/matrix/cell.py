@@ -9,8 +9,8 @@ class Cell(AbstractCell):
         self.checkpoint = checkpoint
         self.victim = victim
 
-    def can_go(self, cell):
-        return not cell.black
+    def can_go(self):
+        return not self.black
 
     @property
     def explored(self):

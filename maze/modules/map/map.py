@@ -5,7 +5,7 @@ import numpy as np
 
 from maze.core.communication.directions import Direction
 from maze.core.navigation import Coord
-from maze.core.utils.constants import NEIGHBOURS
+from maze.core.navigation.coord import direction_to_coord
 from maze.modules.map.matrix import AbstractCell
 
 
@@ -31,12 +31,12 @@ class AbstractMap(ABC):
             if history[element[-1].y][element[-1].x]:
                 continue
             history[element[-1].y][element[-1].x] = True
-            for neighbour in self.matrix.get(element[-1]).getNeighbours():
+            for neighbour in self.matrix.get(element[-1]).get_neighbours(self.matrix):
                 queue.append(element + [neighbour])
         return False
 
     def goto(self, direction: Direction):
-        self.pos += NEIGHBOURS[direction.value]
+        self.pos += direction_to_coord[direction.value]
 
     @property
     def current_cell(self) -> AbstractCell:
