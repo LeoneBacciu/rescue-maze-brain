@@ -17,4 +17,4 @@ class Brain(AbstractBrain):
     def act(self) -> OutputEnvelope:
         if len(self.buffer) == 0:
             self.buffer = absolute_to_directions(self.map.bfs(lambda c: not c.explored))
-        return OutputEnvelope(self.buffer.pop(0), False, False)
+        return OutputEnvelope(self.buffer.pop(0), len(self.buffer) > 0, False)

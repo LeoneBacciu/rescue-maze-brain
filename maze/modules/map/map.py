@@ -21,26 +21,29 @@ class AbstractMap(ABC):
         self.current_cell = cell
         self.current_cell.set_coord(self.pos)
 
+    def goto(self, direction: Direction):
+        self.pos += direction_to_coord[direction.value]
+
     def bfs(self, check):
         queue = [[self.pos]]
         history = np.full(shape=self.dims[1:], fill_value=False, dtype=bool)
         while queue:
             element = queue.pop(0)
-            if check(self.matrix.get(element[-1])):
+            if check(self.get(element[-1])):
                 return element
             if history[element[-1].y][element[-1].x]:
                 continue
             history[element[-1].y][element[-1].x] = True
-            for neighbour in self.matrix.get(element[-1]).get_neighbours(self.matrix):
+            for neighbour in self.get(element[-1]).get_neighbours(self.matrix):
                 queue.append(element + [neighbour])
         return False
 
-    def goto(self, direction: Direction):
-        self.pos += direction_to_coord[direction.value]
+    def get(self, *args):
+        return self.matrix.get(*args)
 
     @property
     def current_cell(self) -> AbstractCell:
-        return self.matrix.get(self.pos)
+        return self.get(self.pos)
 
     @current_cell.setter
     def current_cell(self, value):
