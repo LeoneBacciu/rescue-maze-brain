@@ -6,3 +6,11 @@ class EncoderOverflowError(Exception):
 class MissingDelimitersError(Exception):
     """Missing START or STOP tokens"""
     pass
+
+
+class NoCellsMatch(Exception):
+    pass
+
+
+class StopExecution(Exception):
+    pass

@@ -1,6 +1,7 @@
 from typing import Type
 
 from maze.contrib.robocup.robot.brain import Brain
+from maze.core.errors.errors import StopExecution
 from maze.core.utils.settings import MazeSettings, SerialSettings
 
 
@@ -13,24 +14,22 @@ class Robot:
 
     def run(self):
         self.bridge.handshake()
-        prev_direction = None
         while True:
             ie = self.bridge.read_envelope()
+            print(ie)
 
-            if prev_direction and self.brain.successful(ie):
-                self.map.goto(prev_direction)
+            if not self.map.current_cell.explored:
+                self.map.update(self.brain.learn(ie))
 
-            self.map.update(self.brain.learn(ie))
+            if not self.brain.successful(ie):
+                self.map.rollback()
+
             try:
                 oe = self.brain.act()
-            except StopIteration:
+            except StopExecution:
                 break
-            prev_direction = oe.direction
+            self.map.goto(oe.direction)
+            print(oe)
             self.bridge.send_envelope(oe)
         self.bridge.stop()
         return
-        # while True:
-        #     data, flags = self.bridge.read()
-        #     print(data, flags)
-        #     data, flags = self.brain.act(data, flags)
-        #     self.bridge.write(data, flags)
