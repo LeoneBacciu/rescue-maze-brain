@@ -1,6 +1,7 @@
 from random import randint
 
 from maze.bridge.serial import Serial
+from maze.core.communication.directions import Direction
 from maze.core.communication.envelope import *
 from maze.core.utils.constants import *
 
@@ -24,6 +25,12 @@ class Bridge:
     def read_envelope(self):
         return self.settings.input_envelope.from_bytes(self.serial.read())
 
+    def send_halfway_drop(self, direction: Direction):
+        self.serial.write(bytes([START_TOKEN, 0x01 if direction is Direction.right else 0x10, STOP_TOKEN]))
+
+    def read_halfway_point(self):
+        return self.serial.read()[1]
+
     def stop(self):
-        self.serial.write(b'\xfd\xff')
+        self.serial.write(b'\xfe\xff')
         del self.serial

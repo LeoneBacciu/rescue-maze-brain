@@ -31,5 +31,7 @@ class Robot:
             self.map.goto(oe.direction)
             print(oe)
             self.bridge.send_envelope(oe)
+            if self.bridge.read_halfway_point() != 0:
+                self.brain.halfway()
         self.bridge.stop()
         return

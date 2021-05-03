@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
+from maze.core.communication.directions import Direction
 from maze.core.communication.envelope import BaseInputEnvelope, BaseOutputEnvelope
 from maze.modules.map import AbstractMap
 from maze.modules.map.matrix import AbstractCell
@@ -17,6 +19,10 @@ class AbstractBrain(ABC):
 
     @abstractmethod
     def learn(self, envelope: BaseInputEnvelope) -> AbstractCell:
+        pass
+
+    @abstractmethod
+    def halfway(self) -> Optional[Direction]:
         pass
 
     @abstractmethod
