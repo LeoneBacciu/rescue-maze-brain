@@ -1,3 +1,6 @@
+# set PYTHONPATH=%PYTHONPATH%;C:\Users\sonoa\PyCharmProjects\rescue-maze-brain\
+# export PYTHONPATH="${PYTHONPATH}:/home/pi/robot/rescue-maze-brain/"
+
 from maze.contrib.robocup.communication.envelope import InputEnvelope, OutputEnvelope
 from maze.contrib.robocup.map import Map
 from maze.core.utils.settings import *
