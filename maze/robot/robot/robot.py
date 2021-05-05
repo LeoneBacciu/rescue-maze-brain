@@ -14,6 +14,7 @@ class Robot:
 
     def run(self):
         self.bridge.handshake()
+        print("handshake")
         while True:
             ie = self.bridge.read_envelope()
             print(ie)
@@ -33,5 +34,7 @@ class Robot:
             self.bridge.send_envelope(oe)
             if self.bridge.read_halfway_point() != 0:
                 self.brain.halfway()
+            else:
+                print("no halfway")
         self.bridge.stop()
         return

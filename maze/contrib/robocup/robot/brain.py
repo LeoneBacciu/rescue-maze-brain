@@ -21,6 +21,7 @@ class Brain(AbstractBrain):
 
     def halfway(self) -> Optional[Direction]:
         # TODO: check visual victims
+        print("halfway")
         return
 
     def act(self) -> OutputEnvelope:

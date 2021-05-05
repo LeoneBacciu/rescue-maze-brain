@@ -19,8 +19,8 @@ if __name__ == '__main__':
 
     serial_settings = SerialSettings(
         bridge=Bridge,
-        port='COM3',
-        baud_rate=9600,
+        port='/dev/ttyS0',
+        baud_rate=115200,
         input_envelope=InputEnvelope,
         output_envelope=OutputEnvelope
     )
@@ -30,5 +30,7 @@ if __name__ == '__main__':
         maze_settings=maze_settings,
         serial_settings=serial_settings
     )
+
+    input('waiting...')
 
     robot.run()
