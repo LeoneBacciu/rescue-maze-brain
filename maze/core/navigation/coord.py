@@ -63,4 +63,4 @@ def absoluteToRelative(coords: list):
 
 
 def absolute_to_directions(coords: List[Coord]):
-    return [coord_to_direction(coords[i]-coords[i-1]) for i in range(1, len(coords))]
+    return [coord_to_direction(coords[i] - coords[i - 1]) for i in range(1, len(coords))]

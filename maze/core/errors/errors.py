@@ -14,3 +14,8 @@ class NoCellsMatch(Exception):
 
 class StopExecution(Exception):
     pass
+
+
+class HandshakeException(Exception):
+    def __init__(self, v):
+        self.value = v

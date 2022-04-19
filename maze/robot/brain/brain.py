@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from maze.core.communication.directions import Direction
-from maze.core.communication.envelope import BaseInputEnvelope, BaseOutputEnvelope
+from maze.core.communication.envelope import BaseInputEnvelope, BaseOutputEnvelope, BaseHalfwayEnvelope
 from maze.modules.map import AbstractMap
 from maze.modules.map.matrix import AbstractCell
 
@@ -22,9 +22,13 @@ class AbstractBrain(ABC):
         pass
 
     @abstractmethod
-    def halfway(self) -> Optional[Direction]:
+    def halfway(self, ignore: bool, envelope: BaseHalfwayEnvelope) -> BaseHalfwayEnvelope:
         pass
 
     @abstractmethod
-    def act(self) -> BaseOutputEnvelope:
+    def act(self, envelope: BaseInputEnvelope) -> BaseOutputEnvelope:
+        pass
+
+    @abstractmethod
+    def resume(self):
         pass

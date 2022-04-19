@@ -1,8 +1,10 @@
 from random import randint
+from typing import Optional
 
 from maze.bridge.serial import Serial
 from maze.core.communication.directions import Direction
 from maze.core.communication.envelope import *
+from maze.core.errors.errors import HandshakeException
 from maze.core.utils.constants import *
 
 
@@ -12,12 +14,26 @@ class Bridge:
         self.settings = settings
         self.serial = Serial(settings.port, settings.baud_rate)
 
+    def flush(self):
+        self.serial.flush()
+
     def handshake(self):
-        key = randint(0, 0xff)
+        key = randint(0, 0xfb)
         self.serial.write(bytes([START_TOKEN, key, STOP_TOKEN]))
-        res = int(self.serial.read()[1])
+        data = self.serial.read()
+        print(data)
+        res = int(data[1])
         if key != res:
             raise Exception(f'{res} different from {key}')
+
+    def receive_handshake(self):
+        try:
+            return int(self.serial.read()[1])
+        except HandshakeException as e:
+            return int(e.value[1])
+
+    def send_handshake(self, v):
+        self.serial.write(bytes([HANDSHAKE_TOKEN, v, STOP_TOKEN]))
 
     def send_envelope(self, envelope: BaseOutputEnvelope):
         self.serial.write(bytes(envelope))
@@ -25,11 +41,11 @@ class Bridge:
     def read_envelope(self):
         return self.settings.input_envelope.from_bytes(self.serial.read())
 
-    def send_halfway_drop(self, direction: Direction):
-        self.serial.write(bytes([START_TOKEN, 0x01 if direction is Direction.right else 0x10, STOP_TOKEN]))
+    def send_halfway_envelope(self, envelope: BaseHalfwayEnvelope):
+        self.serial.write(bytes(envelope))
 
-    def read_halfway_point(self):
-        return self.serial.read()[1]
+    def read_halfway_envelope(self):
+        return self.settings.input_halfway_envelope.from_bytes(self.serial.read())
 
     def stop(self):
         self.serial.write(b'\xfe\xff')

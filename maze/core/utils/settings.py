@@ -3,7 +3,7 @@ from typing import Type
 from maze.bridge import Bridge
 from maze.contrib.robocup.map import Map
 from maze.contrib.robocup.map.matrix import Matrix, Cell
-from maze.core.communication.envelope import BaseInputEnvelope, BaseOutputEnvelope
+from maze.core.communication.envelope import BaseInputEnvelope, BaseOutputEnvelope, BaseHalfwayEnvelope
 
 
 class MazeSettings:
@@ -21,9 +21,12 @@ class MazeSettings:
 class SerialSettings:
 
     def __init__(self, bridge: Type[Bridge], port: str, baud_rate: int, input_envelope: Type[BaseInputEnvelope],
-                 output_envelope: Type[BaseOutputEnvelope]):
+                 output_envelope: Type[BaseOutputEnvelope], input_halfway_envelope: Type[BaseHalfwayEnvelope],
+                 output_halfway_envelope: Type[BaseHalfwayEnvelope]):
         self.bridge = bridge
         self.port = port
         self.baud_rate = baud_rate
         self.input_envelope = input_envelope
         self.output_envelope = output_envelope
+        self.input_halfway_envelope = input_halfway_envelope
+        self.output_halfway_envelope = output_halfway_envelope

@@ -4,7 +4,6 @@ from random import sample
 from maze.core.navigation import Coord
 from maze.core.utils.constants import *
 
-
 class AbstractCell(ABC):
 
     @abstractmethod

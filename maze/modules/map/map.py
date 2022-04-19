@@ -8,6 +8,7 @@ from maze.core.errors.errors import NoCellsMatch
 from maze.core.navigation import Coord
 from maze.core.navigation.coord import direction_to_coord
 from maze.modules.map.matrix import AbstractCell
+from maze.modules.map.matrix.cell import AnonymousCell
 
 
 class AbstractMap(ABC):
@@ -42,12 +43,28 @@ class AbstractMap(ABC):
                 queue.append(element + [neighbour])
         raise NoCellsMatch()
 
+    def go_home(self):
+        return self.bfs(lambda c: c.coord == self.route[0])
+
     def get(self, *args):
         return self.matrix.get(*args)
+
+    def teleport(self, coord):
+        self.route.append(coord)
 
     @property
     def current_cell(self) -> AbstractCell:
         return self.get(self.current_pos)
+
+    @property
+    def last_checkpoint(self) -> AbstractCell:
+        coord = list(filter(lambda c: hasattr(c, 'checkpoint') and c.checkpoint, map(self.get, self.route)))
+        if len(coord) > 0:
+            print(f'from last checkpoint')
+            return coord[-1]
+        start = self.get(self.route[0])
+        print(f'from start')
+        return start
 
     @current_cell.setter
     def current_cell(self, value):
@@ -65,3 +82,38 @@ class AbstractMap(ABC):
     def load(settings):
         with open(f'{settings.backup_dir}/backup.bk', 'w+') as f:
             return pickle.load(f)
+
+    def print(self):
+        size = self.matrix.shape
+        for y in range(size[2] - 1, -1, -1):
+            for x in range(size[1]):
+                c = self.get(x, y)
+                if isinstance(c, AnonymousCell):
+                    print('   ', end='')
+                else:
+                    print(' ' + ('─' if c.walls[1] else '│') + ' ', end='')
+            print()
+            for x in range(size[1]):
+                c = self.get(x, y)
+                if isinstance(c, AnonymousCell):
+                    print('   ', end='')
+                    continue
+                print('│' if c.walls[2] else '─', end='')
+                if c.black:
+                    print('B', end='')
+                elif c.coord == self.current_pos:
+                    print('P', end='')
+                elif c.checkpoint:
+                    print('C', end=' ')
+                else:
+                    print(' ', end='')
+                print('│' if c.walls[0] else '─', end='')
+            print()
+            for x in range(size[1]):
+                c = self.get(x, y)
+                if isinstance(c, AnonymousCell):
+                    print('   ', end='')
+                else:
+                    print(' ' + ('─' if c.walls[3] else '│') + ' ', end='')
+            print()
+        print()

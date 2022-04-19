@@ -1,5 +1,8 @@
 from serial import Serial as PySerial
 
+from maze.core.errors.errors import HandshakeException
+from maze.core.utils.constants import HANDSHAKE_TOKEN
+
 
 class Serial:
 
@@ -17,7 +20,13 @@ class Serial:
         buffer = bytes()
         while len(buffer) == 0 or buffer[-1] != 0xff:
             buffer += self.serial.read(1)
+        if buffer[0] == HANDSHAKE_TOKEN:
+            raise HandshakeException(buffer)
         return buffer
 
-    def __del__(self):
-        self.serial.close()
+    def flush(self):
+        self.serial.read_all()
+        self.serial.flush()
+
+    # def __del__(self):
+    #     self.serial.close()

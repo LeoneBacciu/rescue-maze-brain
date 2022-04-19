@@ -32,3 +32,7 @@ class AbstractMatrix(ABC):
             self._matrix[self.level][args[0].y][args[0].x] = args[1]
         else:
             self._matrix[self.level][args[1]][args[0]] = args[2]
+
+    @property
+    def shape(self):
+        return self._matrix.shape

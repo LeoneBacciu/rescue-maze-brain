@@ -34,3 +34,22 @@ class BaseOutputEnvelope(ABC):
     def __str__(self):
         flags = {k: v for k, v in vars(self).items() if k != 'direction'}
         return f'Direction: {str(self.direction)}, Flags: {str(flags)}'
+
+
+class BaseHalfwayEnvelope(ABC):
+
+    @abstractmethod
+    def __init__(self, *flags):
+        pass
+
+    @classmethod
+    def from_bytes(cls, data):
+        return cls(*data[1:-1])
+
+    def __bytes__(self):
+        flags = [v for f, v in vars(self).items() if isinstance(v, int)]
+        return bytes([START_TOKEN] + flags + [STOP_TOKEN])
+
+    def __str__(self):
+        flags = {k: v for k, v in vars(self).items()}
+        return f'Halfway Flags: {str(flags)}'

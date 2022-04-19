@@ -1,7 +1,7 @@
 from typing import Type
 
 from maze.contrib.robocup.robot.brain import Brain
-from maze.core.errors.errors import StopExecution
+from maze.core.errors.errors import StopExecution, HandshakeException
 from maze.core.utils.settings import MazeSettings, SerialSettings
 
 
@@ -12,9 +12,7 @@ class Robot:
         self.bridge = serial_settings.bridge(serial_settings)
         self.brain = brain(self.map)
 
-    def run(self):
-        self.bridge.handshake()
-        print("handshake")
+    def single_run(self):
         while True:
             ie = self.bridge.read_envelope()
             print(ie)
@@ -25,16 +23,35 @@ class Robot:
             if not self.brain.successful(ie):
                 self.map.rollback()
 
+            self.map.print()
+
+            oe = self.brain.act(ie)
+            print(oe)
+
+            self.map.goto(oe.direction)
+            self.bridge.send_envelope(oe)
+
+            hie = self.bridge.read_halfway_envelope()
+            print(hie)
+            hoe = self.brain.halfway(oe.ignore, hie)
+            print(hoe)
+            self.bridge.send_halfway_envelope(hoe)
+
+    def run(self):
+        # self.bridge.flush()
+        # self.bridge.handshake()
+        hs = self.bridge.receive_handshake()
+        print(f'handshake {hex(hs)}')
+        self.bridge.send_handshake(hs)
+
+        while True:
             try:
-                oe = self.brain.act()
+                self.single_run()
             except StopExecution:
                 break
-            self.map.goto(oe.direction)
-            print(oe)
-            self.bridge.send_envelope(oe)
-            if self.bridge.read_halfway_point() != 0:
-                self.brain.halfway()
-            else:
-                print("no halfway")
+            except HandshakeException as e:
+                self.brain.resume()
+                self.bridge.send_handshake(e.value[1])
+
         self.bridge.stop()
         return
