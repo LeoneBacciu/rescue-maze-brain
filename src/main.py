@@ -57,8 +57,8 @@ if __name__ == '__main__':
     # c = Camera(0)
     # print(c)
     # while True:
-        # print(read_all(Brain.l_camera))
-        # print(read_all(Brain.r_camera, debug=True))
+    #     print(read_all(Brain.l_camera))
+    #     print(read_all(Brain.r_camera, debug=True))
         # print()
         # time.sleep(0.2)
     # exit(0)

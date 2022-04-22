@@ -25,6 +25,8 @@ class Camera:
             frame = cv2.rotate(frame, cv2.ROTATE_180)
         frame = self._undistort(frame)
 
+        frame = frame[30:355, :]
+
         # cv2.imshow('frame!', frame)
 
         binary_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

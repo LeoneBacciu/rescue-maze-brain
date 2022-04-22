@@ -67,7 +67,7 @@ class Brain(AbstractBrain):
             print(f'L: letter({letter}) color({color})')
             out += {'': 0, 'g': 1, 'y': 2, 'r': 2}[color]
             if out == 0:
-                out += {'': 0, 'u': 1, 's': 3, 'h': 4}[letter]
+                out += {'': 0, 'u': 0, 's': 0, 'h': 0}[letter]
             if out > 0:
                 return out << 4
 
@@ -76,7 +76,7 @@ class Brain(AbstractBrain):
             print(f'R: letter({letter}) color({color})')
             out += {'': 0, 'g': 1, 'y': 2, 'r': 2}[color]
             if out == 0:
-                out += {'': 0, 'u': 1, 's': 3, 'h': 4}[letter]
+                out += {'': 0, 'u': 0, 's': 0, 'h': 0}[letter]
             if out > 0:
                 return out
         return 0

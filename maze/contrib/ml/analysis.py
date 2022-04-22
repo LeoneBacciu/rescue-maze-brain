@@ -87,7 +87,7 @@ def read_color(frame, debug=False):
 
     buckets = [180 // 2, 240 // 2, 300 // 2]
     labels = ['r', 'y', 'g']
-    delta = 10
+    delta = 30
 
     masks = [cv2.inRange(hsv, (b - delta, MIN_SATURATION, MIN_VALUE), (b + delta, 255, 255)) for b in buckets]
     if debug:
@@ -98,7 +98,7 @@ def read_color(frame, debug=False):
     count_masks = [np.count_nonzero(m) for m in masks]
 
     max_color = max(count_masks)
-    if max_color > 10_000:
+    if max_color > 5_000:
         return labels[count_masks.index(max_color)]
     return ''
 
@@ -115,7 +115,7 @@ def read_all(camera, debug=False):
         if debug:
             print('shot')
         ret, frame, frame_gray = camera.frame()
-        cv2.imwrite(f'd/frame-{time.time()}-{camera.right}.png', frame)
+        # cv2.imwrite(f'd/frame-{time.time()}-{camera.right}.png', frame)
         if ret:
             frames.append([frame, frame_gray])
         if debug:
